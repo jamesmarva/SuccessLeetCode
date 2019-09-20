@@ -3,17 +3,17 @@ package leet1to200.problem0071;
 import java.util.*;
 
 /**
- * @program: SuccessLeetCode
- * @description: https://leetcode-cn.com/problems/simplify-path/
- * @author: James
- * @create: 2019-09-20 05:49
+ * @program SuccessLeetCode
+ * @description https://leetcode-cn.com/problems/simplify-path/
+ * @author James
+ * @create 2019-09-20 05:49
  **/
 public class SimplifyPath0071 {
 
-    /**
+    /*
      * right answer
-     * 执行用时 :  6 ms, 在所有 Java 提交中击败了98.78%的用户
-     * @param path
+     * @description  执行用时 :  6 ms, 在所有 Java 提交中击败了98.78%的用户
+     * @param  path
      * @return
      */
     public String simplifyPathBetter(String path) {
