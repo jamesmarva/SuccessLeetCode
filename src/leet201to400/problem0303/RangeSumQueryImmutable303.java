@@ -65,9 +65,8 @@ public class RangeSumQueryImmutable303 {
         }
         int len = nums.length;
         dp = new int[len + 1];
-        dp[0] = nums[0];
-        for (int i = 1; i < len; ++i) {
-            dp[i + 1] = dp[i - 1] + nums[i];
+        for (int i = 0; i < len; ++i) {
+            dp[i + 1] = dp[i] + nums[i];
         }
     }
 
