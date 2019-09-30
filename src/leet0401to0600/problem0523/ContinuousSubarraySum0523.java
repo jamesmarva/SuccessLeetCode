@@ -29,7 +29,6 @@ public class ContinuousSubarraySum0523 {
         return false;
     }
 
-
     public static boolean checkSubarraySumBest(int[] nums, int k) {
         if (nums == null || nums.length < 2) {
             return false;
@@ -56,8 +55,6 @@ public class ContinuousSubarraySum0523 {
         }
         return false;
     }
-
-
 
     public boolean checkSubarraySumBestR(int[] nums, int k) {
         int sum = 0;
