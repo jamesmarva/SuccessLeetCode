@@ -31,8 +31,6 @@ public class LongestIncreasingSub300 {
 		return res;
 	}
 
-
-
 	public int lengthOfLISBetter(int[] nums) {
 		if (nums == null || nums.length == 0) {
 			return 0;
@@ -56,7 +54,6 @@ public class LongestIncreasingSub300 {
 
 	/**
 	 * 主要的思想就是重新构造一个新的排序好的，从小到大的最长的子序列的数组。
-	 *
 	 * @param  nums 测试参数
 	 * @return 最长的数组
 	 */
