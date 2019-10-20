@@ -12,6 +12,12 @@ import java.util.PriorityQueue;
  **/
 public class KthSmallestElementinSortedMatrix378 {
 
+    /**
+     * 用优先对来构造小顶堆，遍历每个元素，然后进行构造堆，
+     * @param matrix
+     * @param k
+     * @return
+     */
     public static int kthSmallest(int[][] matrix, int k) {
         PriorityQueue<Integer> queue = new PriorityQueue<>(k);
         int res = 0;
@@ -27,6 +33,13 @@ public class KthSmallestElementinSortedMatrix378 {
         return res;
     }
 
+    /**
+     * 二分查找的思想，时间复杂度和空间复杂度都有有所降低，
+     * 时间复杂度为O(logN * (N + M)
+     * @param matrix
+     * @param k
+     * @return
+     */
     public int kthSmallestBetter(int[][] matrix, int k) {
         int rowLen = matrix.length;
         int columnLen = matrix[0].length;
@@ -55,7 +68,6 @@ public class KthSmallestElementinSortedMatrix378 {
         }
         return ans;
     }
-
 
     public static void main(String[] args) {
         int[][] matrix = { { 1,  5,  9}, {10, 11, 13}, {12, 13, 15}};
