@@ -55,7 +55,6 @@ public class WordLadder0127 {
             count++;
         }
         return 0;
-
     }
 
     private boolean isChangeOneLetter(String first, String second) {
@@ -73,6 +72,193 @@ public class WordLadder0127 {
         return countOfDiff == 1;
     }
 
+    /**
+     * 新的BFS
+     * V+N
+     * 执行用时: 89 ms, 在所有 java 提交中击败了77.17%的用户
+     * 内存消耗: 40.6 MB, 在所有 java 提交中击败了69.39%的用
+     * @param beginWord
+     * @param endWord
+     * @param wordList
+     * @return
+     */
+    public int ladderLength2(String beginWord, String endWord, List<String> wordList) {
+        HashSet<String> set = new HashSet<>(wordList);
+        if (!set.contains(endWord)) {
+            return 0;
+        }
+        Queue<String> queue = new LinkedList<>();
+        queue.add(beginWord);
+        int ans = 0;
+        while (queue.size() > 0) {
+            int count = queue.size();
+            while (count > 0) {
+                char[] tempWordChars = queue.poll().toCharArray();
+                for (int j = 0, len = tempWordChars.length; j < len; ++j) {
+                    char oldChar = tempWordChars[j];
+                    for (char index = 'a'; index <= 'z'; index++) {
+                        tempWordChars[j] = index;
+                        String tempWord = new String(tempWordChars);
+                        if (endWord.equals(tempWord)) {
+                            return ans + 1;
+                        }
+                        if (set.contains(tempWord)) {
+                            set.remove(tempWord);
+                            queue.offer(tempWord);
+                        }
+                    }
+                    tempWordChars[j] = oldChar;
+                }
+                count--;
+            }
+            ans++;
+        }
+        return 0;
+    }
+
+
+
+    /**
+     * 新的BFS 单向搜索优化，没啥用。。。不用理会
+     * ×××××××××××××××××××××××××××××××××××××××××××××××××××××××××××××××××××××××××××××××××××××××××
+     * @param beginWord
+     * @param endWord
+     * @param wordList
+     * @return
+     */
+    public int ladderLength3(String beginWord, String endWord, List<String> wordList) {
+        HashSet<String> set = new HashSet<>(wordList);
+        if (!set.contains(endWord)) {
+            return 0;
+        }
+        Map<String, Integer> fromPos = new HashMap<>();
+        int level = 0;
+        fromPos.put(beginWord, -1); // we can change all positions for the begin word
+        Queue<String> queue = new LinkedList<>();
+        queue.offer(beginWord);
+        set.remove(beginWord);
+        while (queue.size() > 0) {
+            level++;
+            int count = queue.size();
+            while (count > 0) {
+                String tempWord = queue.poll();
+                char[] tempWordChars = tempWord.toCharArray();
+                for (int i = 0, len = tempWordChars.length; i < len; ++i) {
+                    // every word only in once, use?
+                    if (fromPos.get(tempWord) != null && i == fromPos.get(tempWord)) {
+                        continue;
+                    }
+                    char oldChar = tempWordChars[i];
+                    for (char letterIndex = 'a'; letterIndex <= 'z'; ++letterIndex) {
+                        tempWordChars[i] = letterIndex;
+                        String afterInsteadWord = new String(tempWordChars);
+                        if (endWord.equals(afterInsteadWord)) {
+                            return level + 1;
+                        }
+                        if (set.contains(afterInsteadWord)) {
+                            set.remove(afterInsteadWord);
+                            queue.offer(afterInsteadWord);
+                            fromPos.put(tempWord, i);
+                        }
+                    }
+                    tempWordChars[i] = oldChar;
+                }
+                count--;
+            }
+        }
+        return 0;
+    }
+
+//    ×××××××××××××××××××××××××××××××××××××××××××××××××××××××××××××××××××××××××××××××××××××××××
+
+
+    /**
+     * 双向广搜
+     * 执行用时 :27 ms, 在所有 java 提交中击败了95.11%的用户
+     * 内存消耗 : 38.5 MB, 在所有 java 提交中击败了87.33%的用户
+     */
+    public int ladderLength4(String beginWord, String endWord, List<String> wordList) {
+        HashSet<String> set = new HashSet<>(wordList);
+        if (!set.contains(endWord)) {
+            return 0;
+        }
+        int level = 0;
+        Queue<String> positiveQueue = new LinkedList<>(Arrays.asList(beginWord));
+        Queue<String> negativeQueue = new LinkedList<>(Arrays.asList(endWord));
+        while (positiveQueue.size() > 0 && negativeQueue.size() > 0) {
+            level++;
+            if (positiveQueue.size() > negativeQueue.size()) {
+                Queue<String> temp = new LinkedList<>(positiveQueue);
+                positiveQueue = new LinkedList<>(negativeQueue);
+                negativeQueue = temp;
+            }
+            int count = positiveQueue.size();
+            Queue<String> tempNewPositiveQueue = new LinkedList<>();
+            HashSet<String> tempNegativeSet = new HashSet<>(negativeQueue);
+            while (count > 0) {
+                String tempWord = positiveQueue.poll();
+                char[] tempWordChars = tempWord.toCharArray();
+                for (int i = 0, len = tempWordChars.length; i < len; ++i) {
+                    char oldChar = tempWordChars[i];
+                    // traversing  26 letter.
+                    for (char letterIndex = 'a'; letterIndex <= 'z'; ++letterIndex) {
+                        tempWordChars[i] = letterIndex;
+                        String tempWordAfterInstead = new String(tempWordChars);
+                        if (tempNegativeSet.contains(tempWordAfterInstead)) {
+                            return level + 1;
+                        }
+                        if (set.contains(tempWordAfterInstead)) {
+                            tempNewPositiveQueue.offer(tempWordAfterInstead);
+                            set.remove(tempWordAfterInstead);
+                        }
+                    }
+                    tempWordChars[i] = oldChar;
+                }
+                count--;
+            }
+            positiveQueue = tempNewPositiveQueue;
+        }
+        return 0;
+    }
+
+/**
+ *  while (!q.empty()) {
+ *             ++level;
+ *
+ *             // queue size is changing, take it out now! otherwise we don't know
+ *             // how many items are in the current level.
+ *             int level_items = q.size();
+ *             for (int i = 0; i < level_items; ++i) {
+ *                 string word = q.front();
+ *                 q.pop();
+ *                 for (int pos = 0; pos < word_len; ++pos) {
+ *                     if (pos == from_pos[word])
+ *                         continue;
+ *
+ *                     char orig_char = word[pos];
+ *                     for (char c = 'a'; c <= 'z'; ++c) {
+ *                         word[pos] = c;
+ *                         if (word == end_word)
+ *                             return level + 1;
+ *
+ *                         if (dic.find(word) == dic.end())
+ *                             continue;
+ *
+ *                         from_pos[word] = pos;
+ *
+ *                         // we don't want to have a path like ... -> hot -> ... -> hot -> ...
+ *                         dic.erase(word);
+ *
+ *                         // queue word to the next level
+ *                         q.push(word);
+ *                     }
+ *                     word[pos] = orig_char;
+ *                 }
+ *                 from_pos.erase(word);
+ *             }
+ *         }
+ *
+ */
     /**
      在提交里看到的最优解，看懂了，解读一下分享出来：
      需要掌握的知识递进：

@@ -63,9 +63,146 @@ public class WordLadderII0126 {
     }
 
 
+    /**
+     * 广度优先用来找最短路劲比较合适，但是这题要把所有的点都找出来。
+     * 这里有个点需要注意，就是需要注意某个点在什么哪个层级，这样可以防止某个点在上一级但是仍然被当作子节点
+     */
+    private List<List<String>> ans = new ArrayList<>();
+    public List<List<String>> findLadders1(String beginWord, String endWord, List<String> wordList) {
+        HashSet<String> set = new HashSet<>(wordList);
+        if (!set.contains(endWord)) {
+            return ans;
+        }
+        Queue<String> queue = new LinkedList<>();
+        HashMap<String, HashSet<String>> parentsMap = new HashMap<>();
+        Map<String, Integer> wordLevel = new HashMap<>();
+        wordLevel.put(beginWord, 1);
+        boolean hasPathToEnd = false;
+        queue.offer(beginWord);
+        set.remove(beginWord);
+        int level = 0;
+        while (queue.size() > 0 && !hasPathToEnd) {
+            level++;
+            int count = queue.size();
+            while (count > 0 ) {
+                String tempWord = queue.poll();
+                char[] tempWordChars = tempWord.toCharArray();
+                if (!parentsMap.containsKey(tempWord)) {
+                    parentsMap.put(tempWord, new HashSet<>());
+                }
+                for (int i = 0, len = tempWordChars.length; i < len; ++i) {
+                    char oldChar = tempWordChars[i];
+                    for (char letterIndex = 'a'; letterIndex <= 'z'; letterIndex++) {
+                        if (letterIndex == oldChar) {
+                            continue;
+                        }
+                        tempWordChars[i] = letterIndex;
+                        String tempWordAfterInstead = new String(tempWordChars);
+                        if (endWord.equals(tempWordAfterInstead)) {
+                            parentsMap.get(tempWord).add(tempWordAfterInstead);
+                            hasPathToEnd = true;
+                        } else if (wordLevel.containsKey(tempWordAfterInstead)
+                                && level < wordLevel.get(tempWordAfterInstead)) {
+                            parentsMap.get(tempWord).add(tempWordAfterInstead);
+                        }
+                        if (set.contains(tempWordAfterInstead)) {
+                            set.remove(tempWordAfterInstead);
+                            queue.offer(tempWordAfterInstead);
+                            wordLevel.put(tempWordAfterInstead, wordLevel.get(tempWord) + 1);
+                            parentsMap.get(tempWord).add(tempWordAfterInstead);
+                        }
+                    }
+                    tempWordChars[i] = oldChar;
+                }
+                count--;
+            }
+        }
+
+        if (hasPathToEnd) {
+            LinkedList<String> beginList = new LinkedList<String>(){{add(beginWord);}};
+            dfs(beginWord, endWord, beginList, parentsMap);
+        }
+        return ans;
+    }
+
+    private void dfs(String current, String endWord,LinkedList<String> tempList, Map<String, HashSet<String>> parentMap) {
+        if (endWord.equals(current)) {
+            ans.add((List<String>)tempList.clone());
+            return;
+        }
+        HashSet<String> children =parentMap.get(current);
+        if (children == null) {
+            return;
+        }
+        for (String item : children) {
+            tempList.addLast(item);
+            dfs(item, endWord, tempList, parentMap);
+            tempList.removeLast();
+        }
+    }
+
+    /**
+     * 单向广度优先搜素
+     */
+    public List<List<String>> findLadders2(String beginWord, String endWord, List<String> wordList) {
+        HashSet<String> set = new HashSet<>(wordList);
+        if (!set.contains(endWord)) {
+            return ans;
+        }
+        HashSet<String> levelSet = new HashSet<>(), levelSetTemp = new HashSet<>();
+        HashMap<String, HashSet<String>> parentToChildren = new HashMap<>();
+        boolean hasPathToEnd = false;
+        levelSet.add(beginWord);
+        while (levelSet.size() > 0  && !hasPathToEnd) {
+            set.removeAll(levelSet);
+            for (String tempWord : levelSet) {
+                if (!parentToChildren.containsKey(tempWord)) {
+                    parentToChildren.put(tempWord, new HashSet<>());
+                }
+                char[] tempWordChars = tempWord.toCharArray();
+                for (int j = 0, len = tempWordChars.length; j < len; ++j) {
+                    char oldChar = tempWordChars[j];
+                    for (char letterIndex = 'a'; letterIndex  <= 'z'; ++letterIndex) {
+                        if (oldChar == letterIndex) {
+                            continue;
+                        }
+                        tempWordChars[j] = letterIndex;
+                        String newWord = new String(tempWordChars);
+                        if (endWord.equals(newWord)) {
+                            hasPathToEnd = true;
+                            parentToChildren.get(tempWord).add(newWord);
+                        } else if (set.contains(newWord) && !hasPathToEnd) {
+                            levelSetTemp.add(newWord);
+                            parentToChildren.get(tempWord).add(newWord);
+                        }
+                    }
+                    tempWordChars[j] = oldChar;
+                }
+            }
+            levelSet = (HashSet<String>) levelSetTemp.clone();
+            levelSetTemp.clear();
+        }
+        if (hasPathToEnd) {
+            LinkedList<String> beginList = new LinkedList<String>(){{add(beginWord);}};
+            dfs(beginWord, endWord, beginList, parentToChildren);
+        }
+        return ans;
+    }
+
     public static void main(String[] args) {
-        ArrayList<String> list = new ArrayList<String>() {{
-                add("asdfasf");
-            }};
+//        ArrayList<String> list = new ArrayList<String>() {{
+//                add("asdfasf");
+//            }};
+//        String begin = "hit";
+//        String end = "cog";
+//        String[] tests = {"hot","dot","dog","lot","log","cog"};
+        String begin = "a";
+        String end = "c";
+        String[] tests = {"a", "b", "c"};
+
+        ArrayList<String> testList = new ArrayList<>(Arrays.asList(tests));
+        WordLadderII0126 wordLadderII0126 = new WordLadderII0126();
+        wordLadderII0126.findLadders1(begin, end, testList);
+
     }
 }
