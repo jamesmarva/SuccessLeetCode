@@ -159,6 +159,9 @@ public class WordLadderII0126 {
                 if (!parentToChildren.containsKey(tempWord)) {
                     parentToChildren.put(tempWord, new HashSet<>());
                 }
+                if (!parentToChildren.containsKey(tempWord)) {
+                    parentToChildren.put(tempWord, new HashSet<>());
+                }
                 char[] tempWordChars = tempWord.toCharArray();
                 for (int j = 0, len = tempWordChars.length; j < len; ++j) {
                     char oldChar = tempWordChars[j];
@@ -189,6 +192,73 @@ public class WordLadderII0126 {
         return ans;
     }
 
+
+    /**
+     *  双向广搜索
+     */
+    public List<List<String>> findLadders3(String beginWord, String endWord, List<String> wordList) {
+        HashSet<String> set = new HashSet<>(wordList);
+        if (!set.contains(endWord)) {
+            return ans;
+        }
+        HashSet<String> begin  = new HashSet<String>(){{add(beginWord);}};
+        HashSet<String> end = new HashSet<String>(){{add(endWord);}};
+        Map<String, HashSet<String>> parentToChildren = new HashMap<>();
+        boolean hasPathToEnd = false;
+        boolean isBack = false;
+        while (begin.size() > 0 && end.size() > 0 && !hasPathToEnd) {
+            if (begin.size() > end.size()) {
+                HashSet<String> temp = new HashSet<>(begin);
+                begin = new HashSet<>(end);
+                end = temp;
+                isBack = true;
+            }
+            set.removeAll(begin);
+            set.removeAll(end);
+            HashSet<String> tempSet = new HashSet<>();
+            for (String itemString : begin) {
+                char[] tempWordChars = itemString.toCharArray();
+
+                for (int i = tempWordChars.length - 1; i >= 0; i--) {
+                    char oldChar = tempWordChars[i];
+                    for (char letterChar = 'a'; letterChar <= 'z'; ++letterChar) {
+                        tempWordChars[i] = letterChar;
+                        String tempNewWord = new String(tempWordChars);
+                        String parent  = itemString;
+                        String child = tempNewWord;
+                        if (isBack) {
+                            String tempParent = new String(parent);
+                            parent = child;
+                            child = tempParent;
+                        }
+                        if (end.contains(tempNewWord)) {
+                            parentToChildren.get(parent).add(child);
+                            hasPathToEnd = true;
+                        } else if (set.contains(tempNewWord) && !hasPathToEnd) {
+                            tempSet.add(tempNewWord);
+                            parentToChildren.get(parent).add(child);
+                        }
+                    }
+                    tempWordChars[i] = oldChar;
+                }
+            }
+            begin = tempSet;
+            if (isBack) {
+                HashSet<String> temp = new HashSet<>(begin);
+                begin = new HashSet<>(end);
+                end = temp;
+                isBack = false;
+            }
+        }
+        if (hasPathToEnd) {
+            LinkedList<String> beginList = new LinkedList<String>(){{add(beginWord);}};
+            dfs(beginWord, endWord, beginList, parentToChildren);
+        }
+        return ans;
+    }
+
+
+
     public static void main(String[] args) {
 //        ArrayList<String> list = new ArrayList<String>() {{
 //                add("asdfasf");
@@ -196,13 +266,16 @@ public class WordLadderII0126 {
 //        String begin = "hit";
 //        String end = "cog";
 //        String[] tests = {"hot","dot","dog","lot","log","cog"};
-        String begin = "a";
-        String end = "c";
-        String[] tests = {"a", "b", "c"};
+//        String begin = "a";
+//        String end = "c";
+//        String[] tests = {"a", "b", "c"};
+        String begin = "hot";
+        String end = "dog";
+        String[] test = {"hot","dog"};
 
-        ArrayList<String> testList = new ArrayList<>(Arrays.asList(tests));
+        ArrayList<String> testList = new ArrayList<>(Arrays.asList(test));
         WordLadderII0126 wordLadderII0126 = new WordLadderII0126();
-        wordLadderII0126.findLadders1(begin, end, testList);
+        wordLadderII0126.findLadders3(begin, end, testList);
 
     }
 }
