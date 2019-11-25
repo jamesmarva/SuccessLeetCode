@@ -163,4 +163,163 @@ public class ThreeSum15 {
         }
         return result;
     }
+
+    /**
+     * 双指针的思想
+     *
+     */
+    public List<List<Integer>> threeSum4(int[] nums) {
+        HashSet<String> set = new HashSet();
+        int len = nums.length;
+        Arrays.sort(nums);
+        ArrayList<List<Integer>> ans = new ArrayList();
+        for (int i = 0; i < len - 2; i++) {
+            int start = i + 1;
+            int end = len - 1;
+            while (start < end) {
+                int tempSum = nums[i] + nums[start] + nums[end];
+                if (tempSum == 0) {
+                    if (set.add(nums[i] + "_" + nums[start] + "_" +nums[end])) {
+                        List<Integer> tempList = new ArrayList();
+                        tempList.add(nums[i]);
+                        tempList.add(nums[start]);
+                        tempList.add(nums[end]);
+                        ans.add(tempList);
+                    }
+                    start++;
+                    end--;
+                } else if (tempSum > 0) {
+                    end--;
+                } else if (tempSum < 0) {
+                    start++;
+                }
+            }
+            while ( i + 1 < len && nums[i] == nums[i + 1]) {
+                i++;
+            }
+        }
+        return ans;
+    }
+
+    public List<List<Integer>> threeSum_5(int[] nums) {
+        HashSet<String> set = new HashSet();
+        int len = nums.length;
+        Arrays.sort(nums);
+        ArrayList<List<Integer>> ans = new ArrayList();
+        for (int i = 0; i < len - 2; i++) {
+            int start = i + 1;
+            int end = len - 1;
+            while (start < end) {
+                if (nums[i] + nums[start] + nums[end] == 0) {
+                    set.add(nums[i] + "_" + nums[start] + "_" +nums[end]);
+                    start++;
+                } else if (nums[i] + nums[start] + nums[end] > 0) {
+                    end--;
+                } else if (nums[i] + nums[start] + nums[end] < 0) {
+                    start++;
+                }
+            }
+            while ( i + 1 < len && nums[i] == nums[i + 1]) {
+                i++;
+            }
+        }
+
+        for (String item : set) {
+            String[] arr = item.split("_");
+            ArrayList tempList = new ArrayList() {{
+                add(Integer.valueOf(arr[0]));
+                add(Integer.valueOf(arr[1]));
+                add(Integer.valueOf(arr[2]));
+            }};
+            ans.add(tempList);
+        }
+        return ans;
+    }
+
+    public List<List<Integer>> threeSum_6(int[] nums) {
+        List<List<Integer>> result = new ArrayList<>();
+        if (nums == null || nums.length < 3) {
+            return result;
+        }
+        Arrays.sort(nums);
+        for (int i = 0; i < nums.length; i++) {
+            if (nums[i] > 0) {
+                break;
+            }
+
+            if (i > 0 && nums[i - 1] == nums[i]) {
+                continue;
+            }
+            int left = i + 1;
+            int right = nums.length - 1;
+            while (left < right) {
+                int sum = nums[i] + nums[left] + nums[right];
+                if (sum < 0) {
+                    left++;
+                } else if (sum > 0) {
+                    right--;
+                } else {
+                    ArrayList<Integer> list = new ArrayList<>();
+                    list.add(nums[i]);
+                    list.add(nums[left]);
+                    list.add(nums[right]);
+                    result.add(list);
+                    // 为了防止重复
+                        while (left < right && nums[left] == nums[left + 1]) {
+                        left++;
+                    }
+                    while (left < right && nums[right] == nums[right - 1]) {
+                        right--;
+                    }
+                }
+            }
+        }
+        return result;
+    }
+    /**
+     * 执行用时 : 33 ms, 在所有 java 提交中击败了96.29%的用户
+     * 内存消耗 :46.9 MB, 在所有 java 提交中击败了95.44%的用户
+     */
+    public List<List<Integer>> threeSum_7(int[] nums) {
+        List<List<Integer>> result = new ArrayList<>();
+        if (nums == null || nums.length < 3) {
+            return result;
+        }
+        Arrays.sort(nums);
+        for (int i = 0; i < nums.length; i++) {
+            if (nums[i] > 0) {
+                break;
+            }
+
+            if (i > 0 && nums[i - 1] == nums[i]) {
+                continue;
+            }
+            int left = i + 1;
+            int right = nums.length - 1;
+            while (left < right) {
+                int sum = nums[i] + nums[left] + nums[right];
+                if (sum < 0) {
+                    left++;
+                } else if (sum > 0) {
+                    right--;
+                } else {
+                    ArrayList<Integer> list = new ArrayList<>();
+                    list.add(nums[i]);
+                    list.add(nums[left]);
+                    list.add(nums[right]);
+                    result.add(list);
+                    // 为了防止重复
+                    left++;
+                    while (left < right && nums[left] == nums[left - 1]) {
+                        left++;
+                    }
+                    right--;
+                    while (left < right && nums[right] == nums[right + 1]) {
+                        right--;
+                    }
+                }
+            }
+        }
+        return result;
+    }
 }
