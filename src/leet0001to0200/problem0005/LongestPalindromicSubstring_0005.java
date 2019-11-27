@@ -40,7 +40,7 @@ public class LongestPalindromicSubstring_0005 {
 
 
     /**
-     * 马拉车算法
+     * 马拉车算法 还没对
      */
     public String findLongestPalindromeString(String s) {
 
@@ -100,7 +100,6 @@ public class LongestPalindromicSubstring_0005 {
         return sb.toString();
     }
 
-
     private String dealString(String s) {
         StringBuilder sb = new StringBuilder();
         sb.append("#");
@@ -120,23 +119,193 @@ public class LongestPalindromicSubstring_0005 {
         }
     }
 
-    public static void main(String[] args) {
-//        String test =
-        String[] testStrArr = new String[] {
-                "abcdcef",
-                "adaelele",
-                "cabadabae",
-                "aaaabcdefgfedcbaa",
-                "aaba",
-                "aaaaaaaaa"
-        };
-        LongestPalindromicSubstring_0005 longestPalindromicSubstring_0005 = new LongestPalindromicSubstring_0005();
-        for (String item : testStrArr) {
-            String test = longestPalindromicSubstring_0005.findLongestPalindromeString(item);
-            System.out.println(test);
+    /**
+     * 动态规划思想
+     * @param s
+     * @return
+     */
+    public String longestPalindrome_1(String s) {
+        if (s == null || s.length() == 0) {
+            return s;
+        }
+        int len = s.length();
+        int[][] dp = new int[len][len];
+        char[] newArr = new StringBuilder(s).reverse().toString().toCharArray();
+        char[] oldArr = s.toCharArray();
+        int maxLen = 0;
+        int endPosition = 0;
+        for (int i = 0; i < len; ++i) {
+            if (oldArr[i] == newArr[0]) {
+                dp[i][0] = 1;
+                maxLen = 1;
+            }
+        }
+        for (int i = 0; i < len; i++) {
+            if (oldArr[0] == newArr[i]) {
+                dp[0][i] = 1;
+            }
         }
 
+        for (int i = 1; i < len; ++i) {
+            for (int j = 1; j < len; j++) {
+                if (oldArr[i] == newArr[j]) {
+                    dp[i][j] = dp[i - 1][j - 1] + 1;
+                }
+                if (maxLen < dp[i][j]) {
+                    int before = len - 1 -j;
+                    int oldI = before + dp[i][j] - 1;
+                    if (oldI == i) {
+                        maxLen = dp[i][j];
+                        endPosition = i;
+                    }
+                }
+            }
+        }
+        return s.substring(endPosition - maxLen + 1, endPosition + 1);
+    }
 
+    /**
+     * 三种情况不能直接用镜像的结果
+     *
+     * 1. 超出了 R
+     * 2. P [ i_mirror ] 遇到了原字符串的左边界
+     * 3. i 等于了 R
+     * @param s
+     * @return
+     */
+    public String longestPalindrome_2(String s) {
+        if (s == null || s.length() == 0) {
+            return s;
+        }
+        int center = 0;
+        int rightSide = 0;
+        String dealS = dealString(s);
+        char[] newChars = dealS.toCharArray();
+        int len = newChars.length;
+        int[] maxLenArr = new int[len];
+        int maxLen = 0;
+        int start = 0;
+        for (int i = 0; i < len; i++) {
+            boolean needCalculate = true;
+            int mirrorValue = 0;
+            if (rightSide > i) {
+                int mirrorIndex = center - (i - center);
+                mirrorValue = maxLenArr[mirrorIndex];
+
+                // 如果超过了右边界，进行调整
+                if(i + mirrorValue > rightSide) {
+                    mirrorValue = rightSide - i;
+                }
+                // 如果根据已知条件计算得出的最长回文小于右边界，则不需要扩展了
+                if(i + mirrorValue < rightSide) {
+                    // 直接推出结论
+                    maxLenArr[i] = mirrorValue;
+                }
+            }
+
+            if (needCalculate) {
+                int newMirrorValue = mirrorValue;
+                while(i - 1 - newMirrorValue >= 0 && i + 1 + newMirrorValue < len) {
+                    if(newChars[i + 1 + newMirrorValue] == newChars[i - 1 - newMirrorValue]) {
+                        newMirrorValue++;
+                    } else {
+                        break;
+                    }
+                }
+                // 更新右边界及中心
+                rightSide = i + newMirrorValue;
+                center = i;
+                if (maxLen < newMirrorValue) {
+                    maxLen = newMirrorValue;
+                    start = (i - maxLen) / 2;
+                }
+                maxLenArr[i] = newMirrorValue;
+            }
+        }
+        return s.substring(start, start + maxLen);
+    }
+
+
+
+    /**
+     * 三种情况不能直接用镜像的结果
+     * 1. 超出了 R
+     * 2. P[i_mirror] 遇到了原字符串的左边界
+     * 3. i 等于了 R
+     */
+    public String longestPalindrome_3(String s) {
+        if (s == null || s.length() == 0) {
+            return s;
+        }
+        int center = 0;
+        int rightSide = 0;
+        String dealS = dealString(s);
+        char[] newChars = dealS.toCharArray();
+        int len = newChars.length;
+        int[] maxLenArr = new int[len];
+        int maxLen = 0;
+        int start = 0;
+        for (int i = 0; i < len; i++) {
+            boolean needCalculate = false;
+            int mirrorValue= 0;
+            if (i >= rightSide) {
+                needCalculate = true;
+            }
+            if (!needCalculate) {
+                // 计算相对rightSideCenter的对称位置
+                int mirrorIndex = center - (i - center);
+                mirrorValue = maxLenArr[mirrorIndex];
+                if (mirrorIndex - mirrorValue == 0 || i + mirrorValue > rightSide) {
+                    needCalculate =true;
+                    mirrorValue= rightSide - i;
+                // 如果根据已知条件计算得出的最长回文小于右边界，则不需要扩展了
+                } else {
+                    maxLenArr[i] = mirrorValue;
+                }
+            }
+
+            if (needCalculate) {
+                int newMirrorValue = mirrorValue;
+                while(i - 1 - newMirrorValue >= 0 && i + 1 + newMirrorValue < len) {
+                    if(newChars[i + 1 + newMirrorValue] == newChars[i - 1 - newMirrorValue]) {
+                        newMirrorValue++;
+                    } else {
+                        break;
+                    }
+                }
+                // 更新右边界及中心
+                rightSide = i + newMirrorValue;
+                center = i;
+                if (maxLen < newMirrorValue) {
+                    maxLen = newMirrorValue;
+                    start = (i - maxLen) / 2;
+                }
+                maxLenArr[i] = newMirrorValue;
+            }
+        }
+        return s.substring(start, start + maxLen);
+    }
+
+    public static void main(String[] args) {
+//        String test =
+//        String[] testStrArr = new String[] {
+//                "abcdcef",
+//                "adaelele",
+//                "cabadabae",
+//                "aaaabcdefgfedcbaa",
+//                "aaba",
+//                "aaaaaaaaa"
+//        };
+//        LongestPalindromicSubstring_0005 longestPalindromicSubstring_0005 = new LongestPalindromicSubstring_0005();
+//        for (String item : testStrArr) {
+//            String test = longestPalindromicSubstring_0005.findLongestPalindromeString(item);
+//            System.out.println(test);
+//        }
+//        System.out.println("abcdefg".substring(1, 4));
+        String test = "bananas";
+        LongestPalindromicSubstring_0005 longestPalindromicSubstring_0005 = new LongestPalindromicSubstring_0005();
+        String test1 = longestPalindromicSubstring_0005.longestPalindrome_3(test);
+        System.out.println(test1);
 //        System.co
     }
 
