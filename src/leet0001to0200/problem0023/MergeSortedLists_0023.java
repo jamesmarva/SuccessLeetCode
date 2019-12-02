@@ -6,11 +6,12 @@ import java.util.List;
 import java.util.PriorityQueue;
 
 /**
+ * https://leetcode-cn.com/problems/merge-k-sorted-lists/
+ * 23. 合并K个排序链表
  * @author James
  * @date 2019-11-28 16:30
  **/
 public class MergeSortedLists_0023 {
-
 
     /**
      * 这种写法非常的节省空间

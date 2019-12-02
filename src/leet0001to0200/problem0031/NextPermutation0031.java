@@ -14,6 +14,51 @@ import java.util.Set;
 public class NextPermutation0031 {
 
 
+
+    public void nextPermutation_1(int[] nums) {
+        if (nums == null || nums.length < 1) {
+            return;
+        }
+
+        int len = nums.length;
+        int index = len - 2;
+        for (;index >= 0; --index) {
+            if (nums[index] < nums[index + 1]) {
+                break;
+            }
+        }
+        if (index == -1) {
+            reverse(nums, 0, len - 1);
+            return;
+        }
+
+        int firstBig = len - 1;
+        for (; firstBig > index; firstBig++) {
+            if (nums[firstBig] > nums[index]) {
+                break;
+            }
+        }
+        if (firstBig > index) {
+            swap(nums, firstBig, index);
+        }
+        reverse(nums, index + 1, len - 1);
+    }
+
+    public void reverse(int[] arr, int start, int end) {
+        while (start < end) {
+           swap(arr, start, end);
+           start++;
+           end--;
+        }
+    }
+
+    public void swap(int[] arr, int start, int end) {
+        int temp = arr[start];
+        arr[start] = arr[end];
+        arr[end] = temp;
+    }
+
+
     private Set<Integer> set = new HashSet<>();
 
     public void nextPermutation(int[] nums) {
@@ -23,9 +68,9 @@ public class NextPermutation0031 {
         dfs(nums, 0, nums.length);
         ArrayList<Integer> list = new ArrayList<>(set);
         Collections.sort(list);
+//        int index = list.indexOf()
 //        int tmep =
 //        list.
-
 
     }
 
@@ -44,10 +89,5 @@ public class NextPermutation0031 {
         }
     }
 
-    private void swap(int[] nums, int a, int b) {
-        int temp = nums[a];
-        nums[a] = nums[b];
-        nums[b] = temp;
 
-    }
 }
