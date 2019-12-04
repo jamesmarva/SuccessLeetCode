@@ -5,12 +5,12 @@ import utils.ListNode;
 import java.util.ArrayList;
 
 /**
- * @program: SuccessLeetCode
- * @description: https://leetcode-cn.com/problems/palindrome-linked-list/
- * @author: James
- * @create: 2019-09-13 07:41
+ * SuccessLeetCode
+ * https://leetcode-cn.com/problems/palindrome-linked-list/
+ * @author James
+ * @date 2019-09-13 07:41
  **/
-public class PalindromeLinkedList0234 {
+public class PalindromeLinkedList_0234 {
 
 
     public boolean isPalindrome(ListNode head) {
@@ -120,5 +120,40 @@ public class PalindromeLinkedList0234 {
             }
         }
         return true;
+    }
+
+    public boolean isPalindrome_1(ListNode head) {
+        if (head == null || head.next == null) {
+            return true;
+        }
+        ListNode slow = head;
+        ListNode fast = head.next;
+        int count = 0;
+        while (fast != null && fast.next != null) {
+            fast = fast.next.next;
+            slow = slow.next;
+            count++;
+        }
+        // reverse begin slow
+        ListNode pre = slow;
+        slow = slow.next;
+
+        while (slow != null) {
+            ListNode after = slow.next;
+            slow.next = pre;
+            pre = slow;
+            slow = after;
+        }
+        // compare
+        ListNode begin = head;
+        ListNode end = pre;
+        for (int i = 0; i < count; i++) {
+            if (begin.val != end.val) {
+                return false;
+            }
+            begin = begin.next;
+            end = end.next;
+        }
+        return begin.val == end.val;
     }
 }
