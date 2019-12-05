@@ -12,8 +12,8 @@ public class DiagonalTraverse_0498 {
 
     /**
      *
-     * @param matrix
-     * @return
+     * @param matrix juzhen
+     * @return jieg
      */
     public int[] findDiagonalOrder(int[][] matrix) {
         if (matrix == null || matrix.length == 0 || matrix[0].length == 0) {
@@ -68,8 +68,8 @@ public class DiagonalTraverse_0498 {
                         {2, 3, 5, 6}
                         };
 
-        DiagonalTraverse_0498 diagonalTraverse_0498 = new DiagonalTraverse_0498();
-        int[] ans = diagonalTraverse_0498.findDiagonalOrder(test);
+        DiagonalTraverse_0498 dd = new DiagonalTraverse_0498();
+        int[] ans = dd.findDiagonalOrder(test);
         System.out.println(Arrays.toString(ans));
 
     }

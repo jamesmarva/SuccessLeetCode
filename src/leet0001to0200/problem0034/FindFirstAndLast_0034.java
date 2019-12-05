@@ -9,25 +9,24 @@ public class FindFirstAndLast_0034 {
     public int[] searchRange(int[] nums, int target) {
         int[] ans = {-1, -1};
         if (nums == null || nums.length == 0) {
-        return ans;
-    }
-    int low = 0;
-    int firstPosition  = getFirstTarget(nums, target, nums.length);
-    int lastPosition = getLastTarget(nums, target, nums.length);
-        if (firstPosition == -1 && lastPosition == -1){
-        return ans;
-    } else if (firstPosition == -1) {
-        ans[0] = lastPosition;
-        ans[1] = lastPosition;
-        return ans;
-    } else if (lastPosition == -1){
-        ans[0] = firstPosition;
-        ans[1] = firstPosition;
-    } else if (firstPosition != -1 && lastPosition != -1){
-        ans[0] = firstPosition;
-        ans[1] = lastPosition;
-        return ans;
-    }
+            return ans;
+        }
+        int firstPosition  = getFirstTarget(nums, target, nums.length);
+        int lastPosition = getLastTarget(nums, target, nums.length);
+            if (firstPosition == -1 && lastPosition == -1){
+            return ans;
+        } else if (firstPosition == -1) {
+            ans[0] = lastPosition;
+            ans[1] = lastPosition;
+            return ans;
+        } else if (lastPosition == -1){
+            ans[0] = firstPosition;
+            ans[1] = firstPosition;
+        } else if (firstPosition != -1 && lastPosition != -1){
+            ans[0] = firstPosition;
+            ans[1] = lastPosition;
+            return ans;
+        }
         return ans;
 }
 

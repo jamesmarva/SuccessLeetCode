@@ -16,9 +16,11 @@ public class CourseSchedule_0207 {
             return true;
         }
         LinkedList<Integer>[] adj = new LinkedList[numCourses];
+//        用这种方法来填充才不会出现问题
         for (int i = 0; i < numCourses; ++i){
             adj[i] = new LinkedList<>();
         }
+//        这里一定要注意，如果用这种方法阿来填充会出现问题
 //        Arrays.fill(adj, new LinkedList<>());
         int len = prerequisites.length;
         int[] inDegree = new int[numCourses];
