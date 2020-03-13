@@ -39,9 +39,17 @@ public class Base70504 {
                 ans.append("-");
             }
             return ans.reverse().toString();
-
     }
 
+    public String convertToBase7Best(int num) {
+        int tmp = Math.abs(num);
+        StringBuilder res = new StringBuilder();
+        while (tmp != 0) {
+            res.append(tmp & 6);
+            tmp >>>= 7;
+        }
+        return res.reverse().toString();
+    }
 
     public static void main(String[] args) {
         System.out.println(-10 % 7);

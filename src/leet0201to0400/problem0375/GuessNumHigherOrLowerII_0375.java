@@ -10,7 +10,6 @@ import java.util.Map;
  **/
 public class GuessNumHigherOrLowerII_0375 {
 
-
     /**
      * 在最坏的情况下，至少需要多少的钱才能完成？
      * 如果 第一 i 那么后面都是 min(res, max
@@ -33,7 +32,9 @@ public class GuessNumHigherOrLowerII_0375 {
 //        return res;
         return getNum(1, n);
     }
+
     private Map<String, Integer> map = new HashMap<>();
+
     public int getNum(int low, int high ) {
         if (low > high) {
             return 0;
@@ -50,7 +51,4 @@ public class GuessNumHigherOrLowerII_0375 {
         map.put(key, res);
         return res;
     }
-
-
-
 }
