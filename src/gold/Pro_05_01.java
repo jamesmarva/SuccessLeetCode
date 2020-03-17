@@ -9,7 +9,6 @@ import java.util.Set;
  **/
 public class Pro_05_01 {
 
-
     /**
      * 错误的答案
      * @param N
