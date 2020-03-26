@@ -25,7 +25,6 @@ public class RemoveDuplicateLetters0316 {
                 while (stack.size() > 0 && stack.peek() > c && map[stack.peek() - 'a'] > 1 && !stack.contains(c)) {
                     map[stack.peek() - 'a']--;
                     stack.pop();
-
                 }
                 if (stack.isEmpty() || !stack.contains(c)) {
                     stack.push(c);
