@@ -24,7 +24,7 @@ public class StatisticsFromLargeSample_1093 {
                     max = i;
                 }
             }
-        }        
-        
+        }
+        return null;
     }
 }
