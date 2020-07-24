@@ -1,9 +1,6 @@
 package leet1001to1200.problem1160;
 
-import java.lang.reflect.Array;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 
 /**
  * @author James
