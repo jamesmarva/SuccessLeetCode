@@ -173,6 +173,7 @@ public class LFUCache {
         public Bucket(Node node) {
             this.head = node;
             this.tail = node;
+
         }
 
         /**

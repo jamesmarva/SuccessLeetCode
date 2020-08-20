@@ -1,63 +1,40 @@
 package leet0401to0600.problem0546;
 
-import java.lang.reflect.Array;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
-
 /**
+ * https://leetcode-cn.com/problems/remove-boxes/
+ * 1,3,2,2,2,3,4,3,1
  *
+ * 这是个消消乐的游戏
  *
- * @author 王涵威
- * @date 2020/8/18 19:15
- */
+ * @author Brilliant James Jamesmarva1993@gmail.com 2020-08-19 02:14
+ **/
 public class RemoveBoxes_0546_v2 {
 
-    private Map<String, Integer> memory = new HashMap<>();
-
     public int removeBoxes(int[] boxes) {
-        return dfs(boxes, 0);
-    }
-
-    private int dfs(int[] boxes, int tmpRes) {
         int len = boxes.length;
-        if (len == 0) {
-            return tmpRes;
-        }
-        String tmpBoxesStr = Arrays.toString(boxes);
-        Integer val = memory.get(tmpBoxesStr);
-        if (val != null) {
-            return val;
-        }
-        int res = 0;
-        for (int i = 0; i < len; i++) {
-            int start = i;
-            while (i < len - 1 && boxes[i] == boxes[i + 1]) {
-                i++;
-            }
-            int end = i;
-            int k = (end - start  + 1);
-            int[] tmpBoxes = new int[len - k];
-            for (int j = 0; j < start; j++) {
-                tmpBoxes[j] = boxes[j];
-            }
-            for (int j = 0; j < len - 1 - end; j++) {
-                tmpBoxes[start + j] = boxes[end + 1 + j];
-            }
-            int tmpDfsVal = dfs(tmpBoxes, tmpRes + k * k);
-            if (res < tmpDfsVal) {
-                res = tmpDfsVal;
-            }
-        }
-        memory.put(tmpBoxesStr, res);
-        return res;
+        int[][][] dp = new int[len][len][len];
+        return cal(boxes, dp, 0, len - 1, 0);
     }
 
-
-    public static void main(String[] args) {
-        int[] t = {1,3,2,2,2,3,4,3,1};
-        RemoveBoxes_0546_v2 r = new RemoveBoxes_0546_v2();
-        System.out.println("---------------------");
-        System.out.println(r.removeBoxes(t));
+    private int cal(int[] boxes, int[][][] dp, int l, int r, int k) {
+        if (l > r) {
+            return 0;
+        }
+        if (dp[l][r][k] != 0) {
+            return dp[l][r][k];
+        }
+        while (r > l && boxes[r] == boxes[r - 1]) {
+            r--;
+            k++;
+        }
+        //
+        dp[l][r][k] = cal(boxes, dp, l, r - 1, 0) + (k + 1) * (k + 1);
+        for (int i = l; i < r; i++) {
+            if (boxes[i] == boxes[r]) {
+                int tmp = cal(boxes, dp, l, i, k + 1)  + cal(boxes, dp, i + 1, r - 1, 0);
+                dp[l][r][k] = Math.max(dp[l][r][k], tmp);
+            }
+        }
+        return dp[l][r][k];
     }
 }
