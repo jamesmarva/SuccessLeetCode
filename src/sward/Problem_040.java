@@ -30,8 +30,6 @@ public class Problem_040 {
     }
 
 
-
-
     private void sortCore(int[] arr, int begin, int end) {
         if (begin >= end) {
             return;

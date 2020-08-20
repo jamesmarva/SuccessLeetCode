@@ -1,12 +1,8 @@
 package leet.pro5080;
 
-import com.sun.source.tree.Tree;
 import utils.TreeNode;
 
 import java.util.ArrayList;
-import java.util.LinkedHashSet;
-import java.util.LinkedList;
-import java.util.List;
 
 /**
  * @author James
