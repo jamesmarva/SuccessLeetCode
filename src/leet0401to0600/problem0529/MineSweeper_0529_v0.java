@@ -3,7 +3,8 @@ package leet0401to0600.problem0529;
 import java.util.*;
 
 /**
- *
+ * 529. 扫雷游戏
+ * https://leetcode-cn.com/problems/minesweeper/
  *
  * @author Brilliant James Jamesmarva1993@gmail.com 2020-08-20 02:21
  **/
