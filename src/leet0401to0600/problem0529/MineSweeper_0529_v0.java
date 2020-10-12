@@ -13,7 +13,6 @@ public class MineSweeper_0529_v0 {
             {1, 0}, {-1, 0}, {0, 1}, {0, -1},
             {1, 1}, {1, -1}, {-1, -1}, {-1, 1}};
 
-
     public char[][] updateBoard(char[][] board, int[] click) {
         if (board.length == 0 || board[0].length == 0) {
             return board;
@@ -29,17 +28,17 @@ public class MineSweeper_0529_v0 {
             return board;
         }
 
-        Queue<Point> queue = new ArrayDeque<>();
-        Set<Point> visited = new HashSet<>();
-        Point begin = new Point(row, col);
+        Queue<Pair> queue = new ArrayDeque<>();
+        Set<Pair> visited = new HashSet<>();
+        Pair begin = new Pair(row, col);
         queue.offer(begin);
         visited.add(begin);
         while (queue.size() > 0) {
-            Point tmp = queue.poll();
+            Pair tmp = queue.poll();
             int rowIdx = 0;
             int colIdx = 0;
             int mineCount = 0;
-            List<Point> tmpList = new ArrayList<>();
+            List<Pair> tmpList = new ArrayList<Pair>();
             for (int i = MOVE.length - 1; i >= 0; i--) {
                 rowIdx = tmp.row + MOVE[i][0];
                 colIdx = tmp.col + MOVE[i][1];
@@ -49,7 +48,7 @@ public class MineSweeper_0529_v0 {
                 if (board[rowIdx][colIdx] == 'M') {
                     mineCount++;
                 } else if (board[rowIdx][colIdx] == 'E') {
-                    Point newPoint = new Point(rowIdx, colIdx);
+                    Pair newPoint = new Pair(rowIdx, colIdx);
                     if (!visited.contains(newPoint)) {
                         tmpList.add(newPoint);
                     }
@@ -68,11 +67,11 @@ public class MineSweeper_0529_v0 {
     }
 
 
-    private class Point {
+    private class Pair {
         public int row;
         public int col;
 
-        public Point(int row, int col) {
+        public Pair(int row, int col) {
             this.row = row;
             this.col = col;
         }
@@ -92,27 +91,11 @@ public class MineSweeper_0529_v0 {
             if (o == null) {
                 return false;
             }
-            if (o instanceof Point) {
-                Point other = (Point) o;
+            if (o instanceof Pair) {
+                Pair other = (Pair) o;
                 return other.toString().equals(this.toString());
             }
             return false;
         }
-    }
-
-
-    public static void main(String[] args) {
-        char[][] board = {
-                {'E','E','E','E','E'},
-                {'E','E','M','E','E'},
-                {'E','E','E','E','E'},
-                {'E','E','E','E','E'}};
-
-        MineSweeper_0529_v0 v0 = new MineSweeper_0529_v0();
-        char[][] boardBack = v0.updateBoard(board, new int[]{3, 0});
-        for (int i = 0, len = boardBack.length; i < len; i++) {
-            System.out.println(Arrays.toString(boardBack[i]));
-        }
-
     }
 }
