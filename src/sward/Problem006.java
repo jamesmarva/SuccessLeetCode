@@ -10,7 +10,7 @@ import java.util.Stack;
  * @author Brilliant James
  * @date 2020-03-07 01:46
  **/
-public class Problem_006 {
+public class Problem006 {
 
 
     /**

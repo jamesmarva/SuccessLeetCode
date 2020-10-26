@@ -5,7 +5,7 @@ package sward;
  * @author Brilliant James
  * @date 2020-05-02 05:21
  **/
-public class Problem_005 {
+public class Problem005 {
 
     public String replaceSpace(String s) {
         if (s == null || s.length() == 0) {
