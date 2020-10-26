@@ -1,2 +1,7 @@
 .idea/
 .idea/codeStyles/codeStyleConfig.xml
+*.class
+
+src/leet/
+out/
+SuccessLeetCode.iml
