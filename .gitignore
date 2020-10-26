@@ -1,3 +1,4 @@
 .idea/
 .idea/codeStyles/codeStyleConfig.xml
 *.class
+out/production/SuccessLeetCode/META-INF/SuccessLeetCode.kotlin_module
