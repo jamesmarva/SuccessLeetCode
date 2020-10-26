@@ -19,6 +19,8 @@ public class Calculator {
 
     private final static char RIGHT_BRACKET = ')';
 
+    private final static int SCALA = 2;
+
     private final static Map<Character, Integer> CHAR_PRIORITY = new HashMap<>();
 
     static {
@@ -34,10 +36,14 @@ public class Calculator {
 
     public static void main(String[] args) {
         Calculator calculator = new Calculator();
-        String exp = "8 * (9 + 0) / 9 =";
+        String exp = "(8 + 1) * (8 + 1) / 9 =";
 
         calculator.checkBracketsAndRemoveSpace(exp);
         System.out.println(calculator.caculate(exp));
+
+//        BigDecimal pre = new BigDecimal("64");
+//        BigDecimal post = new BigDecimal("9");
+//        System.out.println(pre.divide(post, SCALA, BigDecimal.ROUND_HALF_UP));
     }
 
     /**
@@ -75,7 +81,11 @@ public class Calculator {
                             numStack.addLast(pre.multiply(post));
                             break;
                         case '/':
-                            numStack.addLast(pre.divide(post));
+                            try {
+                                numStack.addLast(pre.divide(post));
+                            } catch (ArithmeticException e) {
+                                numStack.addLast(pre.divide(post, SCALA, BigDecimal.ROUND_HALF_UP));
+                            }
                             break;
                         default:
                             break;
@@ -95,12 +105,13 @@ public class Calculator {
 
     private boolean checkOperatorPriority(char op, Deque<Character> charStack) {
         if (charStack.size() > 0) {
-            if ('(' == op) {
+            char tmpChar = charStack.getLast();
+            if (LEFT_BRACKET == op || LEFT_BRACKET == tmpChar) {
                 return false;
             }
             int op1Priority = CHAR_PRIORITY.get(op);
-            int op2Priority = CHAR_PRIORITY.get(charStack.getLast());
-            if (op1Priority >= op2Priority) {
+            int op2Priority = CHAR_PRIORITY.get(tmpChar);
+            if (op1Priority <= op2Priority) {
                 return true;
             } else {
                 return false;
