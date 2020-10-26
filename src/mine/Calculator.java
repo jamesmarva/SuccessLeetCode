@@ -1,8 +1,6 @@
 package mine;
 
-import java.awt.image.AreaAveragingScaleFilter;
 import java.math.BigDecimal;
-import java.math.BigInteger;
 import java.util.*;
 
 /**
@@ -36,7 +34,7 @@ public class Calculator {
 
     public static void main(String[] args) {
         Calculator calculator = new Calculator();
-        String exp = "(8 + 1) * (8 + 1) / 9 =";
+        String exp = "(11 + 1) * (11 + 1) / 9 =";
 
         calculator.checkBracketsAndRemoveSpace(exp);
         System.out.println(calculator.caculate(exp));
