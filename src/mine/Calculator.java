@@ -1,6 +1,7 @@
 package mine;
 
 import java.math.BigDecimal;
+import java.math.MathContext;
 import java.util.*;
 
 /**
@@ -12,7 +13,6 @@ import java.util.*;
 public class Calculator {
 
 //    ＋、-、×、÷
-//
     private final static char LEFT_BRACKET = '(';
 
     private final static char RIGHT_BRACKET = ')';
@@ -22,7 +22,7 @@ public class Calculator {
     private final static Map<Character, Integer> CHAR_PRIORITY = new HashMap<>();
 
     static {
-        CHAR_PRIORITY.put('(', 4);
+        CHAR_PRIORITY.put('^', 4);
         CHAR_PRIORITY.put('*', 3);
         CHAR_PRIORITY.put('/', 3);
         CHAR_PRIORITY.put('+', 2);
@@ -34,10 +34,10 @@ public class Calculator {
 
     public static void main(String[] args) {
         Calculator calculator = new Calculator();
-        String exp = "(11 + 1) * (11 + 1) / 9 =";
+        String exp = "(11 + 1) * (12 + 1) / 9 =";
 
         calculator.checkBracketsAndRemoveSpace(exp);
-        System.out.println(calculator.caculate(exp));
+        System.out.println(calculator.calculate(exp));
 
 //        BigDecimal pre = new BigDecimal("64");
 //        BigDecimal post = new BigDecimal("9");
@@ -49,7 +49,7 @@ public class Calculator {
      * @param exp
      * @return
      */
-    public BigDecimal caculate(String exp) {
+    public BigDecimal calculate(String exp) {
         String newExp = checkBracketsAndRemoveSpace(exp);
         Deque<BigDecimal> numStack = new ArrayDeque<>();
         Deque<Character> charStack = new ArrayDeque<>();
@@ -85,12 +85,18 @@ public class Calculator {
                                 numStack.addLast(pre.divide(post, SCALA, BigDecimal.ROUND_HALF_UP));
                             }
                             break;
+                        case '^':
+                            try {
+                                numStack.addLast(pre.pow(post.intValue()));
+                            } catch (ArithmeticException e) {
+                                numStack.addLast(pre.pow(post.intValue(), MathContext.DECIMAL64));
+                            }
                         default:
                             break;
                     }
                 }
                 if (c != '=') {
-                    if (c == ')') {
+                    if (c == RIGHT_BRACKET) {
                         charStack.removeLast();
                     } else {
                         charStack.addLast(c);
@@ -119,7 +125,7 @@ public class Calculator {
     }
 
     /**
-     * 确定括号是否成双
+     * 确定括号是否成双，以及去除空格
      * @param exp
      * @return
      */
@@ -161,4 +167,7 @@ public class Calculator {
         return exp != null ? exp.replaceAll(" ", "") : "";
     }
 
+    private void checkIsValidChar() {
+        
+    }
 }
