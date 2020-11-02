@@ -47,8 +47,6 @@ public class ValidParentheses_0020 {
 
     /**
      * 最好的解法，一次遍历
-     * @param s
-     * @return
      */
     public boolean isValidBest(String s) {
         if(s.isEmpty()) {
