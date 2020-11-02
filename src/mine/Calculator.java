@@ -17,17 +17,32 @@ public class Calculator {
 
     private final static char RIGHT_BRACKET = ')';
 
+    private final static char LEFT_SQUARE_BRACKET = '[';
+
+    private final static char RIGHT_SQUARE_BRACKET = ']';
+
+    private final static char SPACING = ' ';
+
+
+
+    private final static char MULTIPLE_CHAR = '*';
+
+    private final static char EQUAL_CHAR = '=';
+
     private final static int SCALA = 2;
 
     private final static Map<Character, Integer> CHAR_PRIORITY = new HashMap<>();
 
     static {
+        CHAR_PRIORITY.put('(', 6);
+        CHAR_PRIORITY.put('[', 5);
         CHAR_PRIORITY.put('^', 4);
         CHAR_PRIORITY.put('*', 3);
         CHAR_PRIORITY.put('/', 3);
         CHAR_PRIORITY.put('+', 2);
         CHAR_PRIORITY.put('-', 2);
         CHAR_PRIORITY.put(')', 1);
+        CHAR_PRIORITY.put(']', 1);
         CHAR_PRIORITY.put('=', 0);
     }
 
@@ -55,16 +70,16 @@ public class Calculator {
         Deque<Character> charStack = new ArrayDeque<>();
         char[] expChars = newExp.toCharArray();
         StringBuilder tmpNumStr = new StringBuilder();
-        for (char c : expChars){
-            if (('0' <= c && c <= '9') || '.' == c) {
-                tmpNumStr.append(c);
+        for (char curChar : expChars){
+            if (('0' <= curChar && curChar <= '9') || '.' == curChar) {
+                tmpNumStr.append(curChar);
             } else {
                 if (!tmpNumStr.toString().isEmpty()) {
                     BigDecimal tmpNum = new BigDecimal(tmpNumStr.toString());
                     numStack.addLast(tmpNum);
                     tmpNumStr = new StringBuilder();
                 }
-                while (charStack.size() > 0 && checkOperatorPriority(c, charStack)) {
+                while (charStack.size() > 0 && checkOperatorPriority(curChar, charStack)) {
                     char op = charStack.removeLast();
                     BigDecimal post= numStack.removeLast();
                     BigDecimal pre = numStack.removeLast();
@@ -95,31 +110,32 @@ public class Calculator {
                             break;
                     }
                 }
-                if (c != '=') {
-                    if (c == RIGHT_BRACKET) {
-                        charStack.removeLast();
-                    } else {
-                        charStack.addLast(c);
-                    }
+                if (RIGHT_BRACKET == curChar && charStack.size() > 0
+                        && LEFT_BRACKET == charStack.getLast()) {
+                    charStack.removeLast();
+                } else if (RIGHT_SQUARE_BRACKET == curChar && charStack.size() > 0
+                        && LEFT_SQUARE_BRACKET == charStack.getLast()) {
+                    charStack.removeLast();
+                } else if (EQUAL_CHAR == curChar) {
+                    break;
+                } else {
+                    charStack.addLast(curChar);
                 }
             }
         }
         return numStack.removeLast();
     }
 
-    private boolean checkOperatorPriority(char op, Deque<Character> charStack) {
+    private boolean checkOperatorPriority(char curChar, Deque<Character> charStack) {
         if (charStack.size() > 0) {
-            char tmpChar = charStack.getLast();
-            if (LEFT_BRACKET == op || LEFT_BRACKET == tmpChar) {
+            char beforeChar = charStack.getLast();
+            if (LEFT_BRACKET == curChar || LEFT_BRACKET == beforeChar || LEFT_SQUARE_BRACKET == beforeChar) {
                 return false;
             }
-            int op1Priority = CHAR_PRIORITY.get(op);
-            int op2Priority = CHAR_PRIORITY.get(tmpChar);
-            if (op1Priority <= op2Priority) {
-                return true;
-            } else {
-                return false;
-            }
+
+            int currentPriority = CHAR_PRIORITY.get(curChar);
+            int beforePriority = CHAR_PRIORITY.get(beforeChar);
+            return currentPriority <= beforePriority;
         }
         throw new IllegalArgumentException("the charStack is empty");
     }
@@ -137,18 +153,22 @@ public class Calculator {
         char[] chars = exp.toCharArray();
         StringBuilder res = new StringBuilder();
         for (char tmp : chars) {
-            if (LEFT_BRACKET == tmp) {
+            if (LEFT_BRACKET == tmp || LEFT_SQUARE_BRACKET == tmp) {
                 stack.push(tmp);
             } else if (RIGHT_BRACKET == tmp) {
-                if (stack.isEmpty()) {
+                if (stack.isEmpty() || LEFT_BRACKET != stack.getLast()) {
                     throw new IllegalArgumentException("check expression brackets failing.");
-                } else {
-                    stack.pop();
+                } else if (stack.getLast() == LEFT_BRACKET) {
+                    stack.removeLast();
+                }
+            } else if (RIGHT_SQUARE_BRACKET == tmp) {
+                if (stack.isEmpty() || LEFT_BRACKET != stack.getLast()) {
+                    throw new IllegalArgumentException("check expression square brackets failing.");
+                } else if (stack.getLast() == RIGHT_SQUARE_BRACKET) {
+                    stack.removeLast();
                 }
             }
-            if (' ' == tmp) {
-                continue;
-            } else {
+            if (SPACING != tmp) {
                 res.append(tmp);
             }
         }
