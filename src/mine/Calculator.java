@@ -1,5 +1,11 @@
 package mine;
 
+import utils.FileUtils;
+
+import java.io.BufferedInputStream;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.MathContext;
 import java.util.*;
@@ -23,41 +29,35 @@ public class Calculator {
 
     private final static char SPACING = ' ';
 
+    private final static char MULTIPLE = '*';
 
+    private final static char DIVISION ='/';
 
-    private final static char MULTIPLE_CHAR = '*';
+    private final static char PLUS = '+';
 
-    private final static char EQUAL_CHAR = '=';
+    private final static char MINUS = '-';
+
+    private final static char POW = '^';
+
+    private final static char EQUAL = '=';
 
     private final static int SCALA = 2;
 
     private final static Map<Character, Integer> CHAR_PRIORITY = new HashMap<>();
 
     static {
-        CHAR_PRIORITY.put('(', 6);
-        CHAR_PRIORITY.put('[', 5);
-        CHAR_PRIORITY.put('^', 4);
-        CHAR_PRIORITY.put('*', 3);
-        CHAR_PRIORITY.put('/', 3);
-        CHAR_PRIORITY.put('+', 2);
-        CHAR_PRIORITY.put('-', 2);
-        CHAR_PRIORITY.put(')', 1);
-        CHAR_PRIORITY.put(']', 1);
-        CHAR_PRIORITY.put('=', 0);
+        CHAR_PRIORITY.put(LEFT_BRACKET, 6);
+        CHAR_PRIORITY.put(LEFT_SQUARE_BRACKET, 5);
+        CHAR_PRIORITY.put(POW, 4);
+        CHAR_PRIORITY.put(MULTIPLE, 3);
+        CHAR_PRIORITY.put(DIVISION, 3);
+        CHAR_PRIORITY.put(PLUS, 2);
+        CHAR_PRIORITY.put(MINUS, 2);
+        CHAR_PRIORITY.put(RIGHT_BRACKET, 1);
+        CHAR_PRIORITY.put(RIGHT_SQUARE_BRACKET, 1);
+        CHAR_PRIORITY.put(EQUAL, 0);
     }
 
-
-    public static void main(String[] args) {
-        Calculator calculator = new Calculator();
-        String exp = "(11 + 1) * (12 + 1) / 9 =";
-
-        calculator.checkBracketsAndRemoveSpace(exp);
-        System.out.println(calculator.calculate(exp));
-
-//        BigDecimal pre = new BigDecimal("64");
-//        BigDecimal post = new BigDecimal("9");
-//        System.out.println(pre.divide(post, SCALA, BigDecimal.ROUND_HALF_UP));
-    }
 
     /**
      *
@@ -84,23 +84,23 @@ public class Calculator {
                     BigDecimal post= numStack.removeLast();
                     BigDecimal pre = numStack.removeLast();
                     switch (op) {
-                        case '+':
+                        case PLUS:
                             numStack.addLast(pre.add(post));
                             break;
-                        case '-':
+                        case MINUS:
                             numStack.addLast(pre.subtract(post));
                             break;
-                        case '*':
+                        case MULTIPLE:
                             numStack.addLast(pre.multiply(post));
                             break;
-                        case '/':
+                        case DIVISION:
                             try {
                                 numStack.addLast(pre.divide(post));
                             } catch (ArithmeticException e) {
                                 numStack.addLast(pre.divide(post, SCALA, BigDecimal.ROUND_HALF_UP));
                             }
                             break;
-                        case '^':
+                        case POW:
                             try {
                                 numStack.addLast(pre.pow(post.intValue()));
                             } catch (ArithmeticException e) {
@@ -116,7 +116,7 @@ public class Calculator {
                 } else if (RIGHT_SQUARE_BRACKET == curChar && charStack.size() > 0
                         && LEFT_SQUARE_BRACKET == charStack.getLast()) {
                     charStack.removeLast();
-                } else if (EQUAL_CHAR == curChar) {
+                } else if (EQUAL == curChar) {
                     break;
                 } else {
                     charStack.addLast(curChar);
@@ -154,7 +154,7 @@ public class Calculator {
         StringBuilder res = new StringBuilder();
         for (char tmp : chars) {
             if (LEFT_BRACKET == tmp || LEFT_SQUARE_BRACKET == tmp) {
-                stack.push(tmp);
+                stack.addLast(tmp);
             } else if (RIGHT_BRACKET == tmp) {
                 if (stack.isEmpty() || LEFT_BRACKET != stack.getLast()) {
                     throw new IllegalArgumentException("check expression brackets failing.");
@@ -162,9 +162,9 @@ public class Calculator {
                     stack.removeLast();
                 }
             } else if (RIGHT_SQUARE_BRACKET == tmp) {
-                if (stack.isEmpty() || LEFT_BRACKET != stack.getLast()) {
+                if (stack.isEmpty() || LEFT_SQUARE_BRACKET != stack.getLast()) {
                     throw new IllegalArgumentException("check expression square brackets failing.");
-                } else if (stack.getLast() == RIGHT_SQUARE_BRACKET) {
+                } else if (LEFT_SQUARE_BRACKET == stack.getLast()) {
                     stack.removeLast();
                 }
             }
@@ -190,4 +190,20 @@ public class Calculator {
     private void checkIsValidChar() {
         
     }
+
+    public static void main(String[] args) throws IOException {
+        Calculator calculator = new Calculator();
+//        String exp = "[(11 + 1)] * [(12 + 1) + 1] / 9 =";
+//        calculator.checkBracketsAndRemoveSpace(exp);
+//        System.out.println(calculator.calculate(exp));
+//        String fiePath = "D:\\MyWork\\homework_correction\\Test\\test_expression.txt";
+//        List<String> exps = FileUtils.getListOfStringBufferedStreamReadFile(fiePath);
+//        for (String e : exps) {
+//            System.out.println("expression is: " + e + "; \t result is: " + calculator.calculate(e));
+//        }
+//        BigDecimal pre = new BigDecimal("64");
+//        BigDecimal post = new BigDecimal("9");
+//        System.out.println(pre.divide(post, SCALA, BigDecimal.ROUND_HALF_UP));
+    }
+
 }
