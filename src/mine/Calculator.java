@@ -19,6 +19,8 @@ import java.util.*;
  */
 public class Calculator {
 
+    private final static int DEFAULT_SCALA = 2;
+
     private final static char LEFT_BRACKET = '(';
 
     private final static char RIGHT_BRACKET = ')';
@@ -43,9 +45,19 @@ public class Calculator {
 
     private final static char POW = '^';
 
+    private final static char COLON = ':';
+
+    private final static char PERCENT = '%';
+
+    private final static String PERCENT_STRING = "%";
+
+    private final static String COLON_STRING = ":";
+
     private final static char EQUAL = '=';
 
-    private final static int SCALA = 2;
+    private final static String EQUAL_STRING = "=";
+
+
 
     private final static Map<Character, Integer> CHAR_PRIORITY = new HashMap<>();
 
@@ -61,7 +73,9 @@ public class Calculator {
 
     private final static Map<String, Character> WORD_TO_CHAR = new HashMap<>();
 
-    private static CalculatorTireNode root;
+    private final static Set<Character> OPERATOR_SET;
+
+    private static CalculatorTireNode root = new CalculatorTireNode(' ');
 
     static {
         CHAR_PRIORITY.put(LEFT_BRACKET, 6);
@@ -75,7 +89,6 @@ public class Calculator {
         CHAR_PRIORITY.put(RIGHT_SQUARE_BRACKET, 1);
         CHAR_PRIORITY.put(EQUAL, 0);
 
-        root = new CalculatorTireNode(' ');
         root.insert(RIGHT);
         root.insert(LEFT);
         root.insert(TIMES);
@@ -84,6 +97,13 @@ public class Calculator {
 
         WORD_TO_CHAR.put(TIMES, '*');
         WORD_TO_CHAR.put(DIV, '/');
+
+        OPERATOR_SET = new HashSet<>();
+        OPERATOR_SET.add(MULTIPLE);
+        OPERATOR_SET.add(DIVISION);
+        OPERATOR_SET.add(PLUS);
+        OPERATOR_SET.add(MINUS);
+        OPERATOR_SET.add(POW);
     }
 
     /**
@@ -92,7 +112,7 @@ public class Calculator {
      * @return 计算结果
      */
     public BigDecimal calculate(String exp) {
-        return calculate(exp, SCALA);
+        return calculate(exp, DEFAULT_SCALA);
     }
 
     /**
@@ -175,13 +195,13 @@ public class Calculator {
         try {
             decimalResult = numerator.divide(denominator);
         } catch (ArithmeticException e) {
-            decimalResult = numerator.divide(denominator, null == scala ? SCALA : scala, BigDecimal.ROUND_HALF_UP);
+            decimalResult = numerator.divide(denominator, null == scala ? DEFAULT_SCALA : scala,
+                    BigDecimal.ROUND_HALF_UP);
         }
-        Set<String> result = new HashSet<>(){{
-            add(fractionResult.toString());
-        }};
-        result.add(decimalResult.toString());
-        return result;
+        HashSet<String> res = new HashSet<>();
+        res.add(fractionResult.toString());
+        res.add(decimalResult.toString());
+        return res;
     }
 
     /**
@@ -208,15 +228,27 @@ public class Calculator {
                     i++;
                 }
                 int denominator = 1;
+                int powNum = 0;
                 if (dotIdx != -1) {
-                    denominator = (int) Math.pow(10, i - dotIdx - 1);
+                    powNum = i - dotIdx - 1;
                 }
+                // if 10%
+                if (curChar == PERCENT) {
+                    powNum += 2;
+                }
+                denominator = (int) Math.pow(10, powNum);
                 Fraction f = new Fraction(Integer.parseInt(numTmp.toString()), denominator);
                 numStack.addLast(f);
                 i--;
             } else if (curChar == '\\') {
-                StringBuilder tmpFrac = new StringBuilder();
+                int k = i;
+                boolean trueFraction = false;
+                // 如果前一个不是操作符，
+                if (--k > 0  && !OPERATOR_SET.contains(expChars[k]) && isDigit(expChars[k])) {
+                    trueFraction = true;
+                }
                 i++;
+                StringBuilder tmpFrac = new StringBuilder();
                 for (int j = 0; j < 4; i++, j++) {
                     tmpFrac.append(expChars[i]);
                     if (j == 3) {
@@ -244,6 +276,17 @@ public class Calculator {
                             }
                         }
                     }
+                    // 如果是真分数的情况
+                    if (trueFraction) {
+                        Fraction pre = numStack.removeLast();
+                        numStack.add(Fraction.plus(pre,
+                                new Fraction(Integer.parseInt(numerator.toString()),
+                                        Integer.parseInt(denominator.toString()))));
+                    } else {
+                        numStack.addLast(new Fraction(Integer.parseInt(numerator.toString()),
+                                Integer.parseInt(denominator.toString())));
+                    }
+
                     numStack.addLast(new Fraction(Integer.parseInt(numerator.toString()),
                             Integer.parseInt(denominator.toString())));
                 } else {
@@ -290,6 +333,17 @@ public class Calculator {
             }
         }
         return numStack.removeLast();
+    }
+
+    private boolean isDigit(char c) {
+        return c >= 'a' && c <= 'z';
+    }
+
+    public boolean checkGetResultWithCalculator(String exp) {
+        if (exp.contains(EQUAL_STRING) && !exp.contains(COLON_STRING)){
+
+        }
+        return false;
     }
 
     /**
