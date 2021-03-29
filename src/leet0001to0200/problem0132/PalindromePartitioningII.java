@@ -13,6 +13,7 @@ public class PalindromePartitioningII {
     }
 
     public int minCut(String s) {
+        return 0;
 
     }
 }
