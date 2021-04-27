@@ -13,8 +13,6 @@ import java.util.*;
  **/
 public class LCAofDeepestLeaves1123 {
 
-
-
     public static TreeNode lcaDeepestLeaves(TreeNode root) {
         Map<TreeNode, TreeNode> parentMap = new HashMap<>();
         Queue<TreeNode> queue = new LinkedList<>();
