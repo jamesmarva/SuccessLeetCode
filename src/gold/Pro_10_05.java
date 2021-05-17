@@ -32,7 +32,6 @@ public class Pro_10_05 {
         while (l < r) {
             int m = l + ((r - l) >> 1);
             if (words[m] == "") {
-                String tmp = "";
                 int le = m;
                 while (le >= l && words[le] == "") {
                     le--;
@@ -48,13 +47,30 @@ public class Pro_10_05 {
                 } else if (ri > r) {
                     m = le;
                 } else if (le >= l && ri <= r){
-                    if (s.compareTo(words[le]) > 0 && s.compareTo(words[ri]) > 0) {
+                    int leDis = s.compareTo(words[le]);
+                    int riDis = s.compareTo(words[ri]);
+                    if (leDis == 0) {
+                        return le;
+                    } else if (riDis == 0) {
+                        return ri;
+                    } else if (riDis < 0 && leDis > 0) {
+                        return -1;
+                    } else if (riDis > 0 && leDis > 0) {
+                        m = ri;
+                    } else if (riDis < 0 && leDis < 0) {
                         m = le;
-                    } else if (s.compareTo(words[le]) < 0 && )
+                    }
                 }
+            } 
+            if (s.compareTo(words[m]) > 0) {
+                l = m + 1;
+            } else if (s.compareTo(words[m]) < 0) {
+                r = m - 1;
+            } else {
+                return m;
             }
         }
-
+        return -1;
     }
 
     public int findString(String[] words, String s) {
@@ -119,9 +135,18 @@ public class Pro_10_05 {
         //     System.out.print("i: " + i + " ");
         //     System.out.println((char) i);
         // }
-        int[] a = {1, 2, 3, 4, 5, 6, 7};
+        // int[] a = {1, 2, 3, 4, 5, 6, 7};
+        // Pro_10_05 p = new Pro_10_05();
+        // System.out.println(p.binarySearch(a, 5));
+
+        // System.out.println("abc".compareTo("anotherString"));
+        // System.out.println("abc".compareTo("aaa"));
+        // System.out.println("anotherString".compareTo("aaa"));
+
+        String[] arr = {"at", "", "", "", "ball", "", "", "car", "", "", "dad", "", ""};
+        String target = "dad";
         Pro_10_05 p = new Pro_10_05();
-        System.out.println(p.binarySearch(a, 5));
+        System.out.println(p.findStr(arr, target));
     }
 
     int binarySearch(int[] arr, int tar) {
