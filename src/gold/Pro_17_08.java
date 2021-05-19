@@ -2,6 +2,7 @@ package gold;
 
 
 import java.util.List;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -16,6 +17,19 @@ public class Pro_17_08 {
         int[] h = {120,110,90,60};
         int[] w = {41,43,40,38};
         System.out.println(p.bestSeqAtIndex(h, w));
+
+        int[] a = {1, 3, 5, 7, 15, 19};
+        // int idx = Arrays.binarySearch(a, 0, a.length - 1, 20);
+        System.out.println("2 " + Arrays.binarySearch(a, 0, a.length - 1, 2));
+
+        System.out.println("20 " + Arrays.binarySearch(a, 0, a.length - 1, 20));
+
+        System.out.println("6 " + Arrays.binarySearch(a, 0, a.length - 1, 6));
+
+
+        System.out.println("13 " + Arrays.binarySearch(a, 0, a.length - 1, 13));
+        System.out.println("16 " + Arrays.binarySearch(a, 0, a.length - 1, 16));
+
     }
     
 
@@ -80,7 +94,6 @@ public class Pro_17_08 {
         int[][] person = new int[len][2];
         for (int i = 0; i < len; ++i)
             person[i] = new int[]{height[i], weight[i]};
-
         Arrays.sort(person, (a, b) -> a[0] == b[0] ? b[1] - a[1] : a[0] - b[0]);
         int[] dp = new int[len];
         int res = 0;
@@ -94,5 +107,10 @@ public class Pro_17_08 {
         }
         return res;
     }
+
+
+    // public int testBinarySearch(int[] arr, int tar) {
+        
+    // }
 
 }
