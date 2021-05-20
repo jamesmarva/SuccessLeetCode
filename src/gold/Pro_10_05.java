@@ -31,15 +31,23 @@ public class Pro_10_05 {
         int r = words.length - 1;
         while (l < r) {
             int m = l + ((r - l) >> 1);
-            if (words[m] == "") {
+            System.out.println("m: " + m);
+            System.out.println("l: " + l);
+            System.out.println("r: " + r);
+            System.out.println("words[m]: " + words[m]);
+            System.out.println("---------------------------------");
+            if ("".equals(words[m])) {
                 int le = m;
-                while (le >= l && words[le] == "") {
+                while (le >= l && "".equals(words[le])) {
                     le--;
                 }
                 int ri = m;
-                while (ri < r && words[ri] == "") {
+                while (ri < r && "".equals(words[ri])) {
                     ri++;
                 }
+                System.out.println("words[le]: " + words[le]);
+                System.out.println("words[ri]: " + words[ri]);
+                System.out.println("*********************************");
                 if (le < l && ri > r) {
                     return -1;
                 } else if (le < l) {
@@ -143,8 +151,13 @@ public class Pro_10_05 {
         // System.out.println("abc".compareTo("aaa"));
         // System.out.println("anotherString".compareTo("aaa"));
 
+
+        //["at", "", "", "", "ball", "", "", "car", "", "", "dad", "", ""]
+        // "ball"
+        //
+        //
         String[] arr = {"at", "", "", "", "ball", "", "", "car", "", "", "dad", "", ""};
-        String target = "dad";
+        String target = "ball";
         Pro_10_05 p = new Pro_10_05();
         System.out.println(p.findStr(arr, target));
     }
