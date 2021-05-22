@@ -3,6 +3,7 @@ package gold;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.stream.IntStream;
 
 /**
  * https://leetcode-cn.com/problems/is-unique-lcci/
@@ -44,5 +45,38 @@ public class Pro_01_01 {
             map.put(item, map.getOrDefault(item, 0) + 1);
         }
         return true;
+    }
+
+
+    public boolean isUnique_02(String str) {
+        long pre = 0L;
+        long suf = 0L;
+        for (char c : str.toCharArray()) {
+            if ((int) c >= 64) {
+                long t = suf & (long) (1 << (c - 64));
+                if (t != 0) {
+                    return false;
+                } else {
+                    suf |= (1 << (c - 64));
+                }
+            } else {
+                long t = pre & ((long) 1 << (c));
+                if (t != 0) {
+                    return false;
+                } else {
+                    pre |= 1 << c;
+                }
+            }
+        }
+        return true;
+    }
+
+
+    public static void main(String[] args) {
+//        IntStream.rangeClosed(0, 255).forEach(o -> {
+//            System.out.println(o + ": " + ((char) o));
+//        });
+        Pro_01_01 p = new Pro_01_01();
+        System.out.println(p.isUnique_02("leetcode"));
     }
 }

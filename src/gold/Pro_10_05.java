@@ -29,13 +29,8 @@ public class Pro_10_05 {
     public int findStr(String[] words, String s) {
         int l = 0;
         int r = words.length - 1;
-        while (l < r) {
+        while (l <= r) {
             int m = l + ((r - l) >> 1);
-            System.out.println("m: " + m);
-            System.out.println("l: " + l);
-            System.out.println("r: " + r);
-            System.out.println("words[m]: " + words[m]);
-            System.out.println("---------------------------------");
             if ("".equals(words[m])) {
                 int le = m;
                 while (le >= l && "".equals(words[le])) {
@@ -45,9 +40,6 @@ public class Pro_10_05 {
                 while (ri < r && "".equals(words[ri])) {
                     ri++;
                 }
-                System.out.println("words[le]: " + words[le]);
-                System.out.println("words[ri]: " + words[ri]);
-                System.out.println("*********************************");
                 if (le < l && ri > r) {
                     return -1;
                 } else if (le < l) {
@@ -79,6 +71,40 @@ public class Pro_10_05 {
             }
         }
         return -1;
+    }
+
+    public static void main(String[] args) {
+//        String[] arr = {"at", "", "", "", "ball", "", "", "car", "", "", "dad", "", ""};
+//        String target = "ball";
+
+        String[] arr = {"DirNnILhARNS hOYIFB", "SM ", "YSPBaovrZBS", "evMMBOf", "mCrS", "oRJfjw gwuo", "xOpSEXvfI"};
+        String target = "mCrS";
+        Pro_10_05 p = new Pro_10_05();
+        System.out.println(p.findStr(arr, target));
+        char c ='…';
+//        System.out.println((int) c);
+//        System.out.println((int) '`');
+//        System.out.println();
+//        System.out.println((char) 256);
+
+        // for (int i = 0; i < 256; i++) {
+        //     System.out.print("i: " + i + " ");
+        //     System.out.println((char) i);
+        // }
+        // int[] a = {1, 2, 3, 4, 5, 6, 7};
+        // Pro_10_05 p = new Pro_10_05();
+        // System.out.println(p.binarySearch(a, 5));
+
+        // System.out.println("abc".compareTo("anotherString"));
+        // System.out.println("abc".compareTo("aaa"));
+        // System.out.println("anotherString".compareTo("aaa"));
+
+
+        //["at", "", "", "", "ball", "", "", "car", "", "", "dad", "", ""]
+        // "ball"
+        //
+        //
+
     }
 
     public int findString(String[] words, String s) {
@@ -130,36 +156,6 @@ public class Pro_10_05 {
         public void setVal(String val) {
             this.val = val;
         }
-    }
-
-    public static void main(String[] args) {
-        char c ='…';
-//        System.out.println((int) c);
-//        System.out.println((int) '`');
-//        System.out.println();
-//        System.out.println((char) 256);
-
-        // for (int i = 0; i < 256; i++) {
-        //     System.out.print("i: " + i + " ");
-        //     System.out.println((char) i);
-        // }
-        // int[] a = {1, 2, 3, 4, 5, 6, 7};
-        // Pro_10_05 p = new Pro_10_05();
-        // System.out.println(p.binarySearch(a, 5));
-
-        // System.out.println("abc".compareTo("anotherString"));
-        // System.out.println("abc".compareTo("aaa"));
-        // System.out.println("anotherString".compareTo("aaa"));
-
-
-        //["at", "", "", "", "ball", "", "", "car", "", "", "dad", "", ""]
-        // "ball"
-        //
-        //
-        String[] arr = {"at", "", "", "", "ball", "", "", "car", "", "", "dad", "", ""};
-        String target = "ball";
-        Pro_10_05 p = new Pro_10_05();
-        System.out.println(p.findStr(arr, target));
     }
 
     int binarySearch(int[] arr, int tar) {
