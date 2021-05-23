@@ -5,6 +5,7 @@ import java.util.Map;
 
 /**
  * https://leetcode-cn.com/problems/palindrome-permutation-lcci/
+ * 面试题 01.04. 回文排列
  * @author Brilliant James
  * @date 2020-03-16 08:03
  **/
