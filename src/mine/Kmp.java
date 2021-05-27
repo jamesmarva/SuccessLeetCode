@@ -74,7 +74,7 @@ public class Kmp {
                 "I will have my lunch I will eat sun salad I will make some red toy bear to the sun babies I will have red juice red fish and red rice All the things are red then " +
                 "I need a lot of water on the sun because the sun is too hot So I will walk to the spaceship Ill pilot the spaceship to the earth " +
                 " This is a good holiday on the sun";
-        String t1 = "If we have a book ,we will not be felling of being longly " +
+        StringBuilder t1 = new StringBuilder("If we have a book ,we will not be felling of being longly " +
                 "When I'm free or in trouble, I always take out a book and read quietly. In no time, " +
                 "I've put my heart into it so that I'll forget all the troubles. It's in this way that I've formed the habit of reading in any time. " +
                 "Little boys as I was, I was interest in picture books and storybooks. I was struck by them. No sooner had I entered the middle " +
@@ -85,20 +85,21 @@ public class Kmp {
                 "by Helen Keller's patience and perseverance... Besides these, books also tell me other thing -how to be a man and how to tell the " +
                 "difference between right and wrong. In a word, good books can make me know what I didn't before. " +
                 "So I think of a good book as my best friend." +
-                "";
+                "");
         
         Kmp k = new Kmp();
 
         try (FileReader fr = new FileReader("D:\\MyWork\\2021-05\\words.txt");
              BufferedReader br = new BufferedReader(fr);) {
-            long start = System.currentTimeMillis();
-
-            List<String> rstList = br.lines().filter(o -> {
-                int rst = k.strStr(t1, o);
-                return rst > -1;
-            }).collect(Collectors.toList());
-            System.out.println((System.currentTimeMillis() - start) + "ms");
-            rstList.forEach(System.out::println);
+            for (int i = 0; i < 100; i++) {
+                long start = System.currentTimeMillis();
+                t1.append(" ");
+                List<String> rstList = br.lines()
+                        .filter(t1.toString()::contains)
+                        .collect(Collectors.toList());
+                System.out.println((System.currentTimeMillis() - start) + "ms");
+            }
+//            rstList.forEach(System.out::println);
 
         }
     }
