@@ -1,13 +1,12 @@
 package mine;
 
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.FileReader;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
 /**
- * 〈功能概述〉<br>
  *
  * @author 王涵威
  * @date 21.5.26 20:22
@@ -64,6 +63,8 @@ public class Kmp {
         return dp;
     }
 
+
+
     public static void main(String[] args) throws Exception {
 //        String t = "sit by ";
         String t = "Im going to the sun on my holiday I will go there by a spaceship I will take a big blue spaceship" +
@@ -87,20 +88,53 @@ public class Kmp {
                 "So I think of a good book as my best friend." +
                 "");
         
-        Kmp k = new Kmp();
+//        try (FileReader fr = new FileReader("words/words.txt");
+//             BufferedReader br = new BufferedReader(fr);) {
+//            for (int i = 0; i < 100; i++) {
+//                long start = System.currentTimeMillis();
+////                t1.append(" ");
+////                List<String> rstList = br.lines()
+////                        .filter(t1.toString()::contains)
+////                        .collect(Collectors.toList());
+//                List<String> rstList = br.lines()
+//                        .filter(o -> k.strStr(t1, o) > -1)
+//                        .collect(Collectors.toList());
+//                System.out.println((System.currentTimeMillis() - start) + "ms");
+//            }
+////            rstList.forEach(System.out::println);
+//        }
+        for (int i = 0; i < 100; i++) {
+            t1.append(" ");
+            long startTime = System.currentTimeMillis();
+//            getRst(t1.toString());
+            getRstWith(t1.toString());
+            System.out.println((System.currentTimeMillis() - startTime) + "ms");
+        }
 
-        try (FileReader fr = new FileReader("D:\\MyWork\\2021-05\\words.txt");
+    }
+
+
+    private static List<String> wordsList;
+
+    private static Kmp k = new Kmp();
+
+    static {
+        wordsList = new ArrayList<>();
+        try (FileReader fr = new FileReader("words/words.txt");
              BufferedReader br = new BufferedReader(fr);) {
-            for (int i = 0; i < 100; i++) {
-                long start = System.currentTimeMillis();
-                t1.append(" ");
-                List<String> rstList = br.lines()
-                        .filter(t1.toString()::contains)
-                        .collect(Collectors.toList());
-                System.out.println((System.currentTimeMillis() - start) + "ms");
-            }
-//            rstList.forEach(System.out::println);
+            wordsList = br.lines().collect(Collectors.toList());
+        } catch (Exception e) {
 
         }
     }
+
+    public static List<String> getRst(String s ) {
+        return wordsList.stream().filter(o -> k.strStr(s, o) > -1).collect(Collectors.toList());
+    }
+
+    public static List<String> getRstWith(String s ) {
+        return wordsList.stream().filter(s::contains).collect(Collectors.toList());
+    }
+
+
 }
