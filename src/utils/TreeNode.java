@@ -1,9 +1,6 @@
 package utils;
 
 /**
- * @program: myleetcode
- * @description:
- * @author: James
  * @create: 2019-06-16 00:19
  **/
 public class TreeNode {
